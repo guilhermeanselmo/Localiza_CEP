@@ -1,0 +1,50 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    tools:context=".MainActivity" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="0dip"
+            android:layout_gravity="center"
+            android:layout_weight="0.57"
+            android:contentDescription="@string/nomeModulo"
+            android:src="@drawable/logog" />
+
+        <TextView
+            android:id="@+id/titulo1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="center_horizontal"
+            android:text="@string/nomeModulo"
+            android:textSize="22sp" />
+
+        <EditText
+            android:id="@+id/caixaCEP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:ems="10"
+            android:inputType="number" />
+
+        <Button
+            android:id="@+id/botaoBuscar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="15dp"
+            android:onClick="BuscarCEP"
+            android:text="@string/botaoBusca" />
+    </LinearLayout>
+
+</ScrollView>

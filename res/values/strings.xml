@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Localiza CEP</string>
+    <string name="sobre">Sobre</string>
+    <string name="sair">Sair</string>
+    <string name="nomeModulo">Digite o CEP:</string>
+    <string name="botaoBusca">Buscar</string>
+    <string name="title_activity_endereco">Endereço</string>
+    <string name="cidade">Cidade:</string>
+    <string name="logradouro">Logradouro:</string>
+    <string name="bairro">Bairro:</string>
+    <string name="estado">Estado:</string>
+    <string name="botaoMapa">Mapa</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_mapa_cep">MapaCEP</string>
+    <string name="title_activity_mapa">Mapa</string>
+    <string name="title_activity_sobre">Sobre</string>
+    <string name="titulosobre">\nLocaliza CEP</string>
+    <string name="versao">Versão 1.0</string>
+    <string name="textotrabalho">Trabalho desenvolvido para o curso Programação para Dispositivos Móveis com Android.</string>
+    <string name="curso">Curso realizado pelo Lab. de Redes de conhecimento.</string>
+    <string name="desenvolvido">Desenvolvido por Guilherme J. Anselmo.</string>
+        
+</resources>
