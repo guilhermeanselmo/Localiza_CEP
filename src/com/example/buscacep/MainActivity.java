@@ -1,5 +1,7 @@
 package com.example.buscacep;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +16,7 @@ public class MainActivity extends Activity {
 
 	public final static String EXTRA_MESSAGE = "com.example.buscacep.MESSAGE";
 	private ProcuraCEP procuraCEP;
-	private DadosCEP dadosCEP;
+	private ArrayList<String> dadosCEP;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,26 +29,20 @@ public class MainActivity extends Activity {
 		super.onStart();
 	}
 
-	public void BuscarCEP(View view)
+	public void buscarCEP(View view)
 	{
-		/*ProgressBar search = new ProgressBar(this);
-		RelativeLayout rl = (RelativeLayout) findViewById(R.id.layouts);
-		ImageView im = (ImageView) findViewById(R.id.imageView1);
-		rl.removeView(im);
-		rl.addView(search, 0);*/
-
-		this.dadosCEP = new DadosCEP();
+		this.dadosCEP = new ArrayList<String>();
 		EditText cep = (EditText) findViewById(R.id.caixaCEP);
 		int cepInt = Integer.parseInt(cep.getText().toString());
 
-		procuraCEP = new ProcuraCEP(cepInt/*, this*/);
+		procuraCEP = new ProcuraCEP(cepInt);
 
-		if(procuraCEP.TamanhoCEP())
+		if(procuraCEP.tamanhoCEP())
 		{
 			procuraCEP.start();
 
 			/* Aguardando a Thread finalizar a execução para capturar os dados do CEP ou 
-			o Null retornado*/ 
+			 * o Null retornado*/ 
 			while(procuraCEP.isAlive())
 			{}
 
@@ -58,7 +54,6 @@ public class MainActivity extends Activity {
 			{
 				Intent intentEndereco = new Intent("ENDLOCAL");
 				intentEndereco.putStringArrayListExtra(EXTRA_MESSAGE, dadosCEP);
-
 				startActivity(intentEndereco);
 			}
 		}
@@ -92,7 +87,7 @@ public class MainActivity extends Activity {
 		return procuraCEP;
 	}
 
-	public DadosCEP getDadosCEP() {
+	public ArrayList<String> getDadosCEP() {
 		return dadosCEP;
 	}
 

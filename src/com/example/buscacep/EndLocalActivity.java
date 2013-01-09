@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,7 +24,7 @@ public class EndLocalActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_endereco);
-		//getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		Intent intentEndereco = getIntent();
 		dadosCEP = intentEndereco.getStringArrayListExtra(MainActivity.EXTRA_MESSAGE);
@@ -31,6 +32,10 @@ public class EndLocalActivity extends Activity {
 		ArrayList<TextView> viewEnderecos = new ArrayList<TextView>();
 		ArrayList<TextView> viewLabel = new ArrayList<TextView>();
 		
+		/* 
+		 * Referenciando campos à serem escritos na Activity que apresenta os dados de
+		 * determinado endereço.
+		*/
 		viewEnderecos.add((TextView) findViewById(R.id.editLogradouro));
 		viewEnderecos.add((TextView) findViewById(R.id.editBairro));
 		viewEnderecos.add((TextView) findViewById(R.id.editCidade));
@@ -67,14 +72,15 @@ public class EndLocalActivity extends Activity {
 			startActivity(intentSobre);
 			break;
 		case R.id.sair:
-			finishAffinity();
+			finish();
 		}
 		return super.onOptionsItemSelected(item);
 	}
 	
-	public void MarcaMapa(View view)
+	public void marcaMapa(View view)
 	{
 		Intent intentMarca = new Intent("MAPA");
+		Log.d("Busca CEP", "Botão Mapa pressionado.");
 		intentMarca.putStringArrayListExtra(EXTRA_MESSAGE, dadosCEP);
 		startActivity(intentMarca);
 	}

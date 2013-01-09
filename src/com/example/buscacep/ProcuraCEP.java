@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,20 +16,18 @@ import android.util.Log;
 public class ProcuraCEP extends Thread{
 
 	private int cep;
-	private String capturaJson;
+	private String capturaJson, mensagem;
 	private URL urlConsulta;
 	private InputStreamReader iReader;
 	private BufferedReader bReader;
 	private JSONObject dados;
-	private DadosCEP dadosCEP;
-	//private MainActivity mainActivity;
+	private ArrayList<String> dadosCEP;
 
-	public ProcuraCEP(int cep/*, MainActivity mainActivity*/) {
+	public ProcuraCEP(int cep) {
 		this.cep = cep;
-		//this.mainActivity = mainActivity;
 	}
-
-	public boolean TamanhoCEP()
+	
+	public boolean tamanhoCEP()
 	{
 		if (this.cep > 1000000 && this.cep < 99999999)
 			return true;
@@ -36,87 +35,66 @@ public class ProcuraCEP extends Thread{
 			return false;
 	}
 
-	public void ConsultaCEP()
+	public void consultaCEP()
 	{
-		//if(TamanhoCEP())
-		//{
-			this.dadosCEP = new DadosCEP();
+		this.dadosCEP = new ArrayList<String>();
 
-			try {
-				this.urlConsulta = new URL("http://cep.correiocontrol.com.br/"+ this.cep +".json");
+		try {
+			this.urlConsulta = new URL("http://cep.correiocontrol.com.br/"+ this.cep +".json");
 
-				Log.d("Busca CEP", "Consulta site dos Correios feita");
+			mensagem = "Consulta CEP ao site dos correios feita.";
+			
+			// Cria um stream de entrada do conteúdo.
+			this.iReader = new InputStreamReader( this.urlConsulta.openStream() );
+			this.bReader = new BufferedReader( this.iReader );
 
-				// Cria um stream de entrada do conteúdo.
-				this.iReader = new InputStreamReader( this.urlConsulta.openStream() );
-				this.bReader = new BufferedReader( this.iReader );
+			this.capturaJson = "";
 
-				this.capturaJson = "";
+			// Capturando as linhas com a resposta da consulta ao site dos correios.
+			while ( this.bReader.ready()){
+				this.capturaJson += this.bReader.readLine();
+			}
 
-				// Capturando as linhas com a resposta da consulta ao site dos correios.
-				while ( this.bReader.ready()){
-					this.capturaJson += this.bReader.readLine();
-				}
+			if (!this.capturaJson.equalsIgnoreCase("correiocontrolcep({\"erro\":true});"))
+			{
+				// Instanciando um objeto JSON com os dados capturados.
+				this.dados = new JSONObject(this.capturaJson);
 
-				if (!this.capturaJson.equalsIgnoreCase("correiocontrolcep({\"erro\":true});"))
-				{
-					// Instanciando um objeto JSON com os dados capturados.
-					this.dados = new JSONObject(this.capturaJson);
+				// Gravando as informações em um objeto da classe DadosCE
+				this.dadosCEP.add(this.dados.getString("logradouro"));
+				this.dadosCEP.add(this.dados.getString("bairro"));
+				this.dadosCEP.add(this.dados.getString("localidade"));
+				this.dadosCEP.add(this.dados.getString("uf"));
 
-					// Gravando as informações em um objeto da classe DadosCE
-					this.dadosCEP.add(this.dados.getString("logradouro"));
-					this.dadosCEP.add(this.dados.getString("bairro"));
-					this.dadosCEP.add(this.dados.getString("localidade"));
-					this.dadosCEP.add(this.dados.getString("uf"));
-
-					//return this.dadosCEP;
-				}
-				else 
-				{
-					Log.d("Busca CEP", "CEP não encontrado na base dos correios");
-					dadosCEP = null;
-				}
-			} catch (MalformedURLException e) {
-				Log.d("Busca CEP", "");
+			}
+			else 
+			{
+				mensagem = "CEP não encontrado na base dos correios";
 				dadosCEP = null;
-			} catch (IOException io) {
-				io.printStackTrace();
-				Log.d("Busca CEP", "Erro ao ler fluxo de entrada");
-				dadosCEP = null;
-			} catch (JSONException ej) {
-				ej.printStackTrace();
-				Log.d("Busca CEP", "Erro ao manipular o arquivo em JSON");
-				dadosCEP = null;
-			}		
-
-			/*if (this.dadosCEP == null)
-				mainActivity.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						Toast.makeText(mainActivity, "CEP não encontrado!", Toast.LENGTH_SHORT).show();						
-					}
-				});
-			else
-				mainActivity.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						Toast.makeText(mainActivity, "CEP encontrado!", Toast.LENGTH_SHORT).show();						
-					}
-				});
-				
+			}
+			
+		} catch (MalformedURLException e) {
+			mensagem = "Erro ao formar URL consulta CEP" + e.getMessage();
+			dadosCEP = null;
+		} catch (IOException io) {
+			io.printStackTrace();
+			mensagem = "Erro ao ler fluxo de entrada. Mensagem: " + io.getMessage();
+			dadosCEP = null;
+		} catch (JSONException ej) {
+			ej.printStackTrace();
+			mensagem = "Erro ao manipular o arquivo em JSON. Mensagem: " + ej.getMessage();
+			dadosCEP = null;
 		}
-		else
-			Toast.makeText(mainActivity, "CEP incorreto!", Toast.LENGTH_SHORT).show();
-			*/
-
+		
+		Log.d("Busca CEP", mensagem);
 	}
 
 	@Override
 	public void run() {
-		ConsultaCEP();
+		consultaCEP();
 	}
 
-	public DadosCEP getDadosCEP() {
+	public ArrayList<String> getDadosCEP() {
 		return dadosCEP;
 	}
 

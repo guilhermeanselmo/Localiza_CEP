@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="15dp"
-            android:onClick="BuscarCEP"
+            android:onClick="buscarCEP"
             android:text="@string/botaoBusca" />
     </LinearLayout>
 

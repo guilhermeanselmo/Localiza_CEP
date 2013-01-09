@@ -29,14 +29,23 @@ public class Mapa extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mapa);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		
+
+		double latitude, longitude;		
 		Intent intentLocal = getIntent();
+		
+		// Recebendo a activity EndLocalActivity as informações de endereço referente ao CEP
 		ArrayList<String> dadosCEP = intentLocal.getStringArrayListExtra
 				(EndLocalActivity.EXTRA_MESSAGE);
 		
+		/*
+		 * Componente da API de Localização responsável por retornar informações geográficas
+		 * (latitude/longitude) de acordo com uma determinada descrição de localização.
+		 */
 		Geocoder geocoder = new Geocoder(this);
+				
 		String local;
 		
+		// Alguns CEP não retornam logradouro somente a cidade e o estado.
 		if (dadosCEP.get(0).equalsIgnoreCase("") || dadosCEP.get(0).equalsIgnoreCase(" "))
 			local = dadosCEP.get(2);
 		else
@@ -44,35 +53,43 @@ public class Mapa extends MapActivity {
 
 		try {
 
+			// Capturando as informações geográficas de determinado endereço.
 			Address localidade = geocoder.getFromLocationName(local, 1).get(0);
 
 			if (localidade != null) 
 			{
+				latitude = localidade.getLatitude();
+				longitude = localidade.getLongitude();
 				mapa = (MapView) findViewById(R.id.mapa);
 				mapa.setSatellite(true);
 
-				ImagemOverlay imaOverlay = new ImagemOverlay(R.drawable.marcadorf, new Ponto
-						(localidade.getLatitude(), localidade.getLongitude()));
+				/*
+				 * Instânciando objeto com a imagem e a referência do ponto para determinado 
+				endereço no mapa.
+				*/
+				ImagemOverlay imaOverlay = new ImagemOverlay(R.drawable.marcadorf, 
+						new Ponto(latitude, longitude));
+				
+				// Adicionando imagem de marcador o mapa
 				mapa.getOverlays().add(imaOverlay);
-
-				mapa.getController().animateTo(new Ponto(localidade.getLatitude(),
-						localidade.getLongitude()));
+				
+				mapa.getController().animateTo(new Ponto(latitude, longitude));
 				mapa.getController().setZoom(16);
 				mapa.setBuiltInZoomControls(true);
+				
 			}
 			else
 			{
-				Log.d("Mapa marca CEP", "Não foi possível encontrar uma localidade no mapa para este cep.");
+				Log.d("Mapa marca CEP", "Localidade não encontrada no mapa para este CEP.");
 			}
 		} catch (IOException e) {
-			Log.d("Mapa marca CEP", "Não foi possível obter localidade." + e.getMessage());
+			Log.d("Mapa marca CEP", "Não foi possível obter localidade. Mensagem: " + e.getMessage());
 		}
 		
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_mapa, menu);
 		return true;
 	}
@@ -88,7 +105,7 @@ public class Mapa extends MapActivity {
 			startActivity(intentSobre);
 			break;
 		case R.id.sair:
-			finishAffinity();
+			finish();
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -96,18 +113,17 @@ public class Mapa extends MapActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
+		// Modificando visão do mapa de Satélite para Mapa
 		if(keyCode == KeyEvent.KEYCODE_S) {
 			mapa.setSatellite(true);
 		} else if (keyCode == KeyEvent.KEYCODE_R) {
 			mapa.setSatellite(false);
 		}
-		
 		return super.onKeyDown(keyCode, event);
 	}
 	
 	@Override
 	protected boolean isRouteDisplayed() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
