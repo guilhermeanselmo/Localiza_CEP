@@ -2,6 +2,7 @@ package com.example.buscacep;
 
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,36 +30,54 @@ public class MainActivity extends Activity {
 		super.onStart();
 	}
 
+	@SuppressLint("NewApi")
 	public void buscarCEP(View view)
 	{
+		String numeroCep;
+
 		this.dadosCEP = new ArrayList<String>();
 		EditText cep = (EditText) findViewById(R.id.caixaCEP);
-		int cepInt = Integer.parseInt(cep.getText().toString());
+		numeroCep = cep.getText().toString();
 
-		procuraCEP = new ProcuraCEP(cepInt);
-
-		if(procuraCEP.tamanhoCEP())
+		if (numeroCep.isEmpty() || numeroCep.equalsIgnoreCase(" "))
 		{
-			procuraCEP.start();
-
-			/* Aguardando a Thread finalizar a execução para capturar os dados do CEP ou 
-			 * o Null retornado*/ 
-			while(procuraCEP.isAlive())
-			{}
-
-			this.dadosCEP = procuraCEP.getDadosCEP();
-
-			if (this.dadosCEP == null)
-				Toast.makeText(this, "CEP inexistente!", Toast.LENGTH_SHORT).show();
-			else
-			{
-				Intent intentEndereco = new Intent("ENDLOCAL");
-				intentEndereco.putStringArrayListExtra(EXTRA_MESSAGE, dadosCEP);
-				startActivity(intentEndereco);
-			}
+			Toast.makeText(this, "Campo CEP vazio.", Toast.LENGTH_SHORT).show();
 		}
 		else
-			Toast.makeText(this, "CEP incorreto!", Toast.LENGTH_SHORT).show();
+		{
+			try {
+
+				int cepInt = Integer.parseInt(numeroCep);
+				procuraCEP = new ProcuraCEP(cepInt);
+				
+				if(procuraCEP.tamanhoCEP())
+				{
+					procuraCEP.start();
+
+					/* Aguardando a Thread finalizar a execução para capturar os dados do CEP ou 
+					 * o Null retornado*/ 
+					while(procuraCEP.isAlive())
+					{}
+
+					this.dadosCEP = procuraCEP.getDadosCEP();
+
+					if (this.dadosCEP == null)
+					{
+						Toast.makeText(this, "CEP inexistente!", Toast.LENGTH_SHORT).show();
+					}
+					else
+					{
+						Intent intentEndereco = new Intent("ENDLOCAL");
+						intentEndereco.putStringArrayListExtra(EXTRA_MESSAGE, dadosCEP);
+						startActivity(intentEndereco);
+					}
+				}
+				else
+					Toast.makeText(this, "CEP incorreto!", Toast.LENGTH_SHORT).show();
+			} catch (NumberFormatException nfe) {
+				Toast.makeText(this, "Digite apenas números.", Toast.LENGTH_SHORT).show();
+			}
+		}
 	}
 
 	@Override
