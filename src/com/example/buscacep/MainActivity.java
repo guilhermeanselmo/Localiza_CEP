@@ -4,7 +4,10 @@ import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
@@ -23,6 +26,8 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		verificaConexao();
 	}
 
 	@Override
@@ -34,7 +39,6 @@ public class MainActivity extends Activity {
 	public void buscarCEP(View view)
 	{
 		String numeroCep;
-
 		this.dadosCEP = new ArrayList<String>();
 		EditText cep = (EditText) findViewById(R.id.caixaCEP);
 		numeroCep = cep.getText().toString();
@@ -46,10 +50,9 @@ public class MainActivity extends Activity {
 		else
 		{
 			try {
-
 				int cepInt = Integer.parseInt(numeroCep);
 				procuraCEP = new ProcuraCEP(cepInt);
-				
+
 				if(procuraCEP.tamanhoCEP())
 				{
 					procuraCEP.start();
@@ -84,6 +87,19 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_endereco, menu);
 		return true;
+	}
+
+	public void verificaConexao() {
+        ConnectivityManager cn=(ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo nf=cn.getActiveNetworkInfo();
+        if(nf != null && nf.isConnected()==true )
+        {
+            Toast.makeText(this, "Internet OK", Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            Toast.makeText(this, "Internet não OK", Toast.LENGTH_LONG).show();
+        }
 	}
 
 	@Override
