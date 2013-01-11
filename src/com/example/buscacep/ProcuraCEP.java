@@ -86,7 +86,7 @@ public class ProcuraCEP extends Thread{
 			dadosCEP = null;
 		}
 		
-		Log.d("Busca CEP", mensagem);
+		Log.d("Procura CEP", mensagem);
 	}
 
 	@Override

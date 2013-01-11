@@ -2,18 +2,15 @@ package com.example.buscacep;
 
 import java.util.ArrayList;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-@SuppressLint("NewApi")
 public class EndLocalActivity extends Activity {
 
 	public final static String EXTRA_MESSAGE = "com.example.buscacep.MESSAGE";
@@ -24,7 +21,6 @@ public class EndLocalActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_endereco);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		Intent intentEndereco = getIntent();
 		dadosCEP = intentEndereco.getStringArrayListExtra(MainActivity.EXTRA_MESSAGE);
@@ -68,9 +64,6 @@ public class EndLocalActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
 		case R.id.sobre:
 			Intent intentSobre = new Intent("SOBRE");
 			startActivity(intentSobre);
@@ -84,7 +77,7 @@ public class EndLocalActivity extends Activity {
 	public void marcaMapa(View view)
 	{
 		Intent intentMarca = new Intent("MAPA");
-		Log.d("Busca CEP", "Botão Mapa pressionado.");
+		Log.d("Dados do CEP", "Botão Mapa pressionado.");
 		intentMarca.putStringArrayListExtra(EXTRA_MESSAGE, dadosCEP);
 		startActivity(intentMarca);
 	}

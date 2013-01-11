@@ -3,12 +3,10 @@ package com.example.mapa;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -19,7 +17,6 @@ import com.example.buscacep.R;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 
-@SuppressLint("NewApi")
 public class Mapa extends MapActivity {
 
 	private MapView mapa;
@@ -28,7 +25,6 @@ public class Mapa extends MapActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mapa);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		double latitude, longitude;		
 		Intent intentLocal = getIntent();
@@ -97,9 +93,6 @@ public class Mapa extends MapActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
 		case R.id.sobre:
 			Intent intentSobre = new Intent("SOBRE");
 			startActivity(intentSobre);
